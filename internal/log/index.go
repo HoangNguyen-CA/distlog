@@ -43,6 +43,7 @@ func newIndex(f *os.File, c Config) (*index, error) {
 	return idx, nil
 }
 
+// does not handle graceful shutdown
 func (i *index) Close() error {
 	if err := i.mmap.Sync(gommap.MS_SYNC); err != nil {
 		return err
