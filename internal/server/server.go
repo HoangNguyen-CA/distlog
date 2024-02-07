@@ -4,7 +4,6 @@ import (
 	"context"
 
 	api "github.com/HoangNguyen-CA/distlog/api/v1"
-	
 )
 
 type Config struct {
@@ -82,4 +81,9 @@ func (s *grpcServer) ConsumeStream(
 			req.Offset++
 		}
 	}
+}
+
+type CommitLog interface {
+	Append(*api.Record) (uint64, error)
+	Read(uint64) (*api.Record, error)
 }
