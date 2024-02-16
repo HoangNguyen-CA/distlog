@@ -8,6 +8,7 @@ import (
 	. "github.com/HoangNguyen-CA/distlog/internal/discovery"
 	"github.com/hashicorp/serf/serf"
 	"github.com/stretchr/testify/require"
+	"github.com/travisjeffery/go-dynaport"
 )
 
 func TestMembership(t *testing.T) {
@@ -56,4 +57,26 @@ func setupMember(t *testing.T, members []*Membership) (
 	require.NoError(t, err)
 	members = append(members, m)
 	return members, h
+}
+
+type handler struct {
+	joins  chan map[string]string
+	leaves chan string
+}
+
+func (h *handler) Join(id, addr string) error {
+	if h.joins != nil {
+
+		h.joins <- map[string]string{
+			"id":   id,
+			"addr": addr,
+		}
+	}
+	return nil
+}
+func (h *handler) Leave(id string) error {
+	if h.leaves != nil {
+		h.leaves <- id
+	}
+	return nil
 }
